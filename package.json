@@ -1,0 +1,34 @@
+{
+  "name": "imagesearch",
+  "version": "1.0.0",
+  "description": "Image Search Abstraction Layer",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tpoikela/fcc-api-imagesearch.git"
+  },
+  "keywords": [
+    "express",
+    "node",
+    "fcc"
+  ],
+  "author": "Tuomas Poikela",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tpoikela/fcc-api-imagesearch/issues"
+  },
+  "homepage": "https://github.com/tpoikela/fcc-api-imagesearch#readme",
+  "dependencies": {
+    "bing.search": "^1.0.1",
+    "express": "^4.14.0",
+    "mongodb": "^2.2.11"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "request": "^2.78.0"
+  }
+}
