@@ -47,8 +47,10 @@ describe(img_api + "/lolcats No offset given", () => {
 
             var text = res.text;
             var json = JSON.parse(text);
-            expect(json).to.have.property("when");
-            expect(json).to.have.property("keyword");
+            expect(json[0]).to.have.property("when");
+            expect(json[0]).to.have.property("keyword");
+
+            expect(json[0].keyword).to.equal("atestword");
             done();
         });
     });
