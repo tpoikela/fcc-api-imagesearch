@@ -1,11 +1,14 @@
 
+
 const express = require("express");
 
 const qs = require("querystring");
 const url = require("url");
+const path = require("path");
 
 const BingSearch = require("./src/bing_search");
 const Database = require("./src/database");
+
 
 var app = express();
 
@@ -25,28 +28,37 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-app.get("/api/imagesearch", (req, res) => {
+app.get("/api/imagesearch/*", (req, res) => {
     console.log("ImageSearch got request to /api/imagesearch");
 
+    var urlObj = url.parse(req.url);
+    var query = qs.parse(urlObj.query);
+
+    var pathName = urlObj.pathname; // Extract last name
+    var pathBase = path.basename(pathName);
+
+    console.log("app.get/api url: " + JSON.stringify(urlObj));
+    console.log("app.get/api query: " + JSON.stringify(query));
+
+    var offset = 0;
+    if (query.hasOwnProperty("offset")) offset = query.offset;
 
     // Extract the keyword from req
-    var keyword = "lolcats";
+    var keyword = pathBase;
+    console.log("Keyword for image search: " + keyword);
+
+    // TODO
+    // Send a request to Bing
+    // Format output json
 
     // Add search to DB
     db.add(keyword, (err) => {
         if (err) throw err;
-        res.json({});
+        res.json({test: "OK"});
     });
 
-    // Extract offset parameter (if any)
 
-    // Send a request to Bing
 
-    // Format output json
-
-    // Store search to the DB
-
-    // Return results as JSON
 });
 
 app.get("/api/latest/imagesearch", (req, res) => {
@@ -54,9 +66,7 @@ app.get("/api/latest/imagesearch", (req, res) => {
     // Fetch latest searches from DB
     db.getN(10, (err, docs) => {
         if (err) throw err;
-
-        var json = JSON.stringify(docs);
-        res.json(json);
+        res.json(docs);
     });
 
     // Return the results as json
