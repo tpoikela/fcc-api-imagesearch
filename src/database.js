@@ -15,6 +15,7 @@ var Database = function(db_url) {
 
                 var collection = db.collection(collName);
                 var when = new Date().getTime();
+                var whenPretty = "";
                 var newDoc = {keyword: keyword, when: when};
 
                 collection.insert(newDoc, function(err, data) {
@@ -40,7 +41,8 @@ var Database = function(db_url) {
 
                 //var query = {short_id: parseInt(id)};
 
-                collection.find().toArray((err, docs) => {
+                collection.find({}, {_id: 0}).sort({when: -1}).limit(N).toArray(
+                    (err, docs) => {
                     if (err) func(err);
                     console.log("Docs: " + JSON.stringify(docs));
 
