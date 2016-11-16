@@ -49,15 +49,17 @@ app.get("/api/imagesearch/*", (req, res) => {
 
     // TODO
     // Send a request to Bing
-    // Format output json
+    var results = bing_search.search({keyword: keyword, offset: offset},
+        (err, results) => {
+            if (err) throw err;
 
-    // Add search to DB
-    db.add(keyword, (err) => {
-        if (err) throw err;
-        res.json({test: "OK"});
+            // Add search to DB
+            db.add(keyword, (err) => {
+                if (err) throw err;
+                res.json(results);
+            });
+
     });
-
-
 
 });
 
