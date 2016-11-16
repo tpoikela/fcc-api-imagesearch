@@ -1,0 +1,6 @@
+{
+  "name": "Image Search Abstraction Layer for FCC API projects",
+  "description": "Returns image search results based on given search expression",
+  "repository": "https://github.com/tpoikela/fcc-api-imagesearch",
+  "keywords": ["node", "express", "static"]
+}
