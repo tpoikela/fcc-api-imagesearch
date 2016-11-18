@@ -10,6 +10,9 @@ var BingSearch = function(key) {
     this.search = function(query, func) {
         var expr = query.keyword;
         var offset = query.offset;
+
+        console.log("Now doing imagesearch with keyword " + expr);
+
         search.images(expr,
             {top: 10, skip: offset},
             (err, results) => {
