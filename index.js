@@ -45,29 +45,36 @@ app.get("/api/imagesearch/*", (req, res) => {
     var offset = 0;
     if (query.hasOwnProperty("offset")) offset = query.offset;
 
-    // Extract the keyword from req
-    var keyword = pathBase;
-    console.log("Keyword for image search: " + keyword);
+    if (/^\d+$/.test(offset)) {
 
-    // Send a request to Bing
-    var results = bing_search.search({keyword: keyword, offset: offset},
-        (err, results) => {
-            if (err) {
-                console.error(err);
-                res.json({error: "Couldn't complete the search."});
-            }
-            else {
-                // Add search to DB
-                db.add(keyword, (err) => {
-                    if (err) {
-                        console.error(err);
-                        console.error("There was an error adding to DB.");
-                    }
-                    res.json(results);
-                });
-            }
+        // Extract the keyword from req
+        var keyword = pathBase;
+        console.log("Keyword for image search: " + keyword);
 
-    });
+        // Send a request to Bing
+        var results = bing_search.search({keyword: keyword, offset: offset},
+            (err, results) => {
+                if (err) {
+                    console.error(err);
+                    res.json({error: "Couldn't complete the search."});
+                }
+                else {
+                    // Add search to DB
+                    db.add(keyword, (err) => {
+                        if (err) {
+                            console.error(err);
+                            console.error("There was an error adding to DB.");
+                        }
+                        res.json(results);
+                    });
+                }
+
+        });
+    }
+    else {
+        res.json({error: "query not formatted correctly. Expecting number. Got: " +
+            query.offset});
+    }
 
 });
 
