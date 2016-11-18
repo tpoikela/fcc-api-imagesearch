@@ -14,9 +14,11 @@ var app = express();
 
 var bing_key = process.env.BING_KEY || "false_key";
 var port = process.env.PORT || 8080;
-var db_url = process.env.MONGOLAB_URI;// ||
+var db_url = process.env.MONGOLAB_URI;
 
-db_url = "mongodb://localhost:27017/imagesearch";
+if (process.env.NODE_ENV === "test") {
+    db_url = "mongodb://localhost:27017/imagesearch";
+}
 
 var bing_search = new BingSearch(bing_key);
 var db = new Database(db_url);
@@ -47,17 +49,23 @@ app.get("/api/imagesearch/*", (req, res) => {
     var keyword = pathBase;
     console.log("Keyword for image search: " + keyword);
 
-    // TODO
     // Send a request to Bing
     var results = bing_search.search({keyword: keyword, offset: offset},
         (err, results) => {
-            if (err) throw err;
-
-            // Add search to DB
-            db.add(keyword, (err) => {
-                if (err) throw err;
-                res.json(results);
-            });
+            if (err) {
+                console.error(err);
+                res.json({error: "Couldn't complete the search."});
+            }
+            else {
+                // Add search to DB
+                db.add(keyword, (err) => {
+                    if (err) {
+                        console.error(err);
+                        console.error("There was an error adding to DB.");
+                    }
+                    res.json(results);
+                });
+            }
 
     });
 
@@ -67,7 +75,9 @@ app.get("/api/latest/imagesearch", (req, res) => {
 
     // Fetch latest searches from DB
     db.getN(10, (err, docs) => {
-        if (err) throw err;
+        if (err) {
+            res.json({error: "Couldn't access the database for searches."});
+        }
         res.json(docs);
     });
 
